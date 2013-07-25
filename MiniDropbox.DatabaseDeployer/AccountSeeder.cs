@@ -1,4 +1,6 @@
-﻿using DomainDrivenDatabaseDeployer;
+﻿using System.Collections.Generic;
+using DomainDrivenDatabaseDeployer;
+using FizzWare.NBuilder;
 using MiniDropbox.Domain;
 using NHibernate;
 
@@ -15,14 +17,11 @@ namespace MiniDropbox.DatabaseDeployer
 
         public void Seed()
         {
-            
-            var account = new Account
-                {
-                   
-
-                };
-
-            _session.Save(account);
+            IList<Account> accountList = Builder<Account>.CreateListOfSize(10).Build();
+            foreach (Account account in accountList)
+            {
+                _session.Save(account);
+            }
         }
     }
 }
