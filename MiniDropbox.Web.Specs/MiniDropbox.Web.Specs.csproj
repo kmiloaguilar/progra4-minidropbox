@@ -55,8 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="when_a_guest_user_visit_for_first_time_the_website.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="when_a_register_user_tries_to_login_with_correct_values.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

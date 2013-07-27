@@ -1,18 +1,23 @@
-﻿@model dynamic
+﻿@model MiniDropbox.Web.Models.AccountLoginModel
 
 @{
-    Layout = null;
+    ViewBag.Title = "LogIn";
+    Layout = "~/Views/shared/_BootstrapLayout.empty.cshtml";
 }
 
-<!DOCTYPE html>
+<h2>LogIn to MiniDropbox</h2>
 
-<html>
-    <head>
-        <title>title</title>
-    </head>
-    <body>
-        <div>
-              Esto es login
-        </div>
-    </body>
-</html>
+@using (@Html.BeginForm("LogIn", "Account", FormMethod.Post, new { @class = "form-signin" }))
+{
+    <h2 class="form-signin-heading">Please sign in</h2>
+    @Html.TextBoxFor(x=>x.Username,new {@class="input-block-level"})
+    @Html.PasswordFor(x=>x.Password,new {@class="input-block-level"})
+    @*<input type="text" class="input-block-level" placeholder="Email address">
+        <input type="password" class="input-block-level" placeholder="Password">
+       *@ <label class="checkbox">
+              <input type="checkbox" value="remember-me"> Remember me
+          </label>@*
+    @Html.ActionLink("Sign In","LogIn","Account",new {@class="btn btn-large btn-primary"});
+        *@<button class="btn btn-large btn-primary" type="submit">Sign in</button>
+}
+
