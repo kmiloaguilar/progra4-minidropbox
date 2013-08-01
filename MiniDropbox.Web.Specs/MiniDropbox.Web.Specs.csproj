@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="given_a_account_controller_context.cs" />
     <Compile Include="when_a_guest_user_visit_for_first_time_the_website.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="when_a_register_user_tries_to_login_with_correct_values.cs" />
@@ -63,6 +64,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MiniDropbox.Domain\MiniDropbox.Domain.csproj">
+      <Project>{54A1F338-886A-4906-9970-778557316AE4}</Project>
+      <Name>MiniDropbox.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MiniDropbox.Web\MiniDropbox.Web.csproj">
       <Project>{C06E85BF-B127-4E8C-BA35-8E6E633439EE}</Project>
       <Name>MiniDropbox.Web</Name>
