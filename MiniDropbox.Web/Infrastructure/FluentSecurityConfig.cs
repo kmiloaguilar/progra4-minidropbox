@@ -19,7 +19,7 @@ namespace MiniDropbox.Web.Infrastructure
 
                 configuration.ForAllControllers().DenyAnonymousAccess();
                 configuration.For<AccountController>(x => x.LogIn()).Ignore();
-                configuration.For<HomeController>(x => x.Create()).RequireRole(new object[] {"Admin"});
+                configuration.For<HomeController>(x => x.Create()).RequireRole(new object[] { "Admin" });
                 configuration.ResolveServicesUsing(type =>
                 {
                     if (type == typeof(IPolicyViolationHandler))

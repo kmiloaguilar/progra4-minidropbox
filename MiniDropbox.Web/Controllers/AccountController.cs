@@ -1,4 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Security;
+using AutoMapper;
 using BootstrapMvcSample.Controllers;
 using MiniDropbox.Domain;
 using MiniDropbox.Domain.Services;
@@ -20,7 +24,7 @@ namespace MiniDropbox.Web.Controllers
         [HttpGet]
         public ActionResult LogIn()
         {
-            var account = _readOnlyRepository.GetById<Account>(1);
+           
 
             return View(new AccountLoginModel());
         }
@@ -28,7 +32,22 @@ namespace MiniDropbox.Web.Controllers
         [HttpPost]
         public ActionResult LogIn(AccountLoginModel model)
         {
-            return RedirectToAction("ListAllContent", "Disk");
+            var account = _readOnlyRepository.First<Account>(
+                    x => x.Email == model.Email && x.Password == model.Password);
+
+
+
+            if (account != null)
+            {
+
+                List<string> roles = account.Roles.Select(x => x.Name).ToList();
+                FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
+                SetAuthenticationCookie(model.Email, roles);
+                return RedirectToAction("Index"); //redirect to wanted view.
+            }
+
+            Error("Email and/or password incorrect");
+            return View(model);
         }
 
         [HttpGet]
@@ -36,5 +55,33 @@ namespace MiniDropbox.Web.Controllers
         {
             return View(new AccountInputModel());
         }
+
+        [HttpPost]
+        public ActionResult Register(AccountInputModel model)
+        {
+            var account = Mapper.Map<AccountInputModel, Account>(model);
+            account.IsConfirm = false;
+            account.HashConfirmation = CreateHastConfirmationString();
+            account = _writeOnlyRepository.Create(account);
+
+            //enviar email para confirmar
+            // si paso el email
+            return View();
+        }
+
+        private string CreateHastConfirmationString()
+        {
+            return "";
+        }
+
+        [HttpGet]
+        public ActionResult ConfirmAccount(string hash)
+        {
+            Account account = _readOnlyRepository.Query<Account>(x => x.HashConfirmation == hash).FirstOrDefault();
+            account.IsConfirm = true;
+            _writeOnlyRepository.Update(account);
+            return null;
+        }
+
     }
 }
