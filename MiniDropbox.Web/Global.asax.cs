@@ -60,7 +60,7 @@ namespace MiniDropbox.Web
                                                                           ConnectionString(
                                                                               x =>
                                                                               x.FromConnectionStringWithKey(
-                                                                                  "MiniDropbox.Remote"));
+                                                                                  "MiniDropbox.Local"));
             ISessionFactory sessionFactory = new SessionFactoryBuilder(new MappingScheme(), databaseConfiguration)
                 .Build();
 
@@ -72,8 +72,10 @@ namespace MiniDropbox.Web
             base.OnApplicationStarted();
             AreaRegistration.RegisterAllAreas();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
+
             FluentSecurityConfig.Configure();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BootstrapBundleConfig.RegisterBundles(BundleTable.Bundles);
             ExampleLayoutsRouteConfig.RegisterRoutes(RouteTable.Routes);

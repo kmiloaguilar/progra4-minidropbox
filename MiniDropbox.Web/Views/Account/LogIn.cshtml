@@ -5,19 +5,20 @@
     Layout = "~/Views/shared/_BootstrapLayout.empty.cshtml";
 }
 
-<h2>LogIn to MiniDropbox</h2>
+<h1>Mini-Dropbox</h1>
 
 @using (@Html.BeginForm("LogIn", "Account", FormMethod.Post, new { @class = "form-signin" }))
 {
-    <h2 class="form-signin-heading">Please sign in</h2>
-    @Html.TextBoxFor(x=>x.Username,new {@class="input-block-level"})
+    <h2 class="form-signin-heading">Please log in</h2>
+    @Html.TextBoxFor(x=>x.Email,new {@class="input-block-level"})
     @Html.PasswordFor(x=>x.Password,new {@class="input-block-level"})
-    @*<input type="text" class="input-block-level" placeholder="Email address">
-        <input type="password" class="input-block-level" placeholder="Password">
-       *@ <label class="checkbox">
-              <input type="checkbox" value="remember-me"> Remember me
-          </label>@*
-    @Html.ActionLink("Sign In","LogIn","Account",new {@class="btn btn-large btn-primary"});
-        *@<button class="btn btn-large btn-primary" type="submit">Sign in</button>
+  
+    <label class="checkbox">
+       <input type="checkbox" value="remember-me"> Remember me
+    </label>
+    
+    
+    <button class="btn btn-large btn-primary" type="submit">Log in</button>
+    @Html.ActionLink("Register", "Register", null, new { @class = "btn btn-large " })
 }
 

@@ -10,7 +10,7 @@ namespace MiniDropbox.Web.Infrastructure
 
         public ActionResult Handle(PolicyViolationException exception)
         {
-            return new RedirectToRouteResult("SignIn",
+            return new RedirectToRouteResult("LogIn",
                                              new RouteValueDictionary
                                                  {{"error", "You have to be logged in order to view this website"}});
         }

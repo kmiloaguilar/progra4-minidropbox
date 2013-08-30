@@ -11,11 +11,11 @@ namespace MiniDropbox.Web.Specs
     {
         private Establish context = () =>
             {
-                _diskController = new DiskController();
+                //_diskController = new DiskController();
             };
 
         private Because of = () => {
-                                       _result = _diskController.ListAllContent();
+                                       _result = _diskController.Index();
         };
 
         private It should_display_a_view_for_viewing_files = () =>

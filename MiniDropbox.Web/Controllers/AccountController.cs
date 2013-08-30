@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
+using Amazon;
+using Amazon.S3;
+using Amazon.S3.IO;
+using Amazon.S3.Model;
 using AutoMapper;
 using BootstrapMvcSample.Controllers;
 using MiniDropbox.Domain;
 using MiniDropbox.Domain.Services;
 using MiniDropbox.Web.Models;
+
 
 namespace MiniDropbox.Web.Controllers
 {
@@ -24,8 +30,6 @@ namespace MiniDropbox.Web.Controllers
         [HttpGet]
         public ActionResult LogIn()
         {
-           
-
             return View(new AccountLoginModel());
         }
 
@@ -35,19 +39,26 @@ namespace MiniDropbox.Web.Controllers
             var account = _readOnlyRepository.First<Account>(
                     x => x.Email == model.Email && x.Password == model.Password);
 
-
-
             if (account != null)
             {
-
-                List<string> roles = account.Roles.Select(x => x.Name).ToList();
+                var roles = new List<string>();
+                string roleToAdd = "";
+                roleToAdd = account.IsAdmin ? "Admin" : "User";
+                roles.Add(roleToAdd);
                 FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
                 SetAuthenticationCookie(model.Email, roles);
-                return RedirectToAction("Index"); //redirect to wanted view.
+                return RedirectToAction("Index", "Disk");
             }
 
             Error("Email and/or password incorrect");
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult LogOut()
+        {
+            FormsAuthentication.SignOut();
+            return View("Login",new AccountLoginModel());
         }
 
         [HttpGet]
@@ -60,28 +71,22 @@ namespace MiniDropbox.Web.Controllers
         public ActionResult Register(AccountInputModel model)
         {
             var account = Mapper.Map<AccountInputModel, Account>(model);
-            account.IsConfirm = false;
-            account.HashConfirmation = CreateHastConfirmationString();
+            account.BucketName = string.Format("mdp.{0}", Guid.NewGuid());
             account = _writeOnlyRepository.Create(account);
 
-            //enviar email para confirmar
-            // si paso el email
-            return View();
+            //Create a bucket for the new user on AWS S3
+            var client = AWSClientFactory.CreateAmazonS3Client();
+            var newBucket = new PutBucketRequest {BucketName = account.BucketName};
+            client.PutBucket(newBucket);
+
+            Success("El usuario "+account.Email + " se ha registrado.");
+
+            return RedirectToAction("LogIn");
         }
 
-        private string CreateHastConfirmationString()
+        public ActionResult Index()
         {
-            return "";
-        }
-
-        [HttpGet]
-        public ActionResult ConfirmAccount(string hash)
-        {
-            Account account = _readOnlyRepository.Query<Account>(x => x.HashConfirmation == hash).FirstOrDefault();
-            account.IsConfirm = true;
-            _writeOnlyRepository.Update(account);
             return null;
         }
-
     }
 }

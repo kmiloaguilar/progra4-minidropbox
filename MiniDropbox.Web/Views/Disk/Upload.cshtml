@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Upload";
+    Layout = "~/Views/shared/_BootstrapLayout.basic.cshtml";
+}
+
+<h2>Upload file</h2>
+
+@using (@Html.BeginForm("UploadFile", "Disk", FormMethod.Post, new {enctype = "multipart/form-data" }))
+{
+    <input type='file' name='file' />
+    <br />
+    <button class="btn btn-primary" type="submit">Upload</button>
+    @Html.ActionLink("Go Back", "Index", null, new { @class = "btn" })
+}

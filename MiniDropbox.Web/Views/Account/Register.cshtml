@@ -1,18 +1,32 @@
-﻿@model MiniDropbox.Web.Models.AccountInputModel
+﻿@using BootstrapSupport
+@model Object
 
 @{
-    Layout = null;
+    ViewBag.Title = "Register";
+    Layout = "~/Views/shared/_BootstrapLayout.empty.cshtml";
 }
 
-<!DOCTYPE html>
-
-<html>
-    <head>
-        <title>title</title>
-    </head>
-    <body>
-        <div>
-              
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset class="form-horizontal">
+        <legend>Register <small>Details</small></legend>
+        @foreach (var property in Model.VisibleProperties())
+        {
+            using(Html.ControlGroupFor(property.Name)){
+                @Html.Label(property.Name.ToSeparatedWords(), new { @class = "control-label" })
+                 <div class="controls">
+                     @Html.Editor(property.Name, new { @class = "input-xlarge" })
+                     @Html.ValidationMessage(property.Name, null, new { @class = "help-inline" })
+                 </div>
+            }
+        }
+		<div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            @Html.ActionLink("Cancel", "LogIn", null, new { @class = "btn " })
         </div>
-    </body>
-</html>
+    </fieldset>
+}
+<div>
+    @Html.ActionLink("Back to Log in", "LogIn")
+</div>

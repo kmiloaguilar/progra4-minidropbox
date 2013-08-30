@@ -10,6 +10,7 @@ using MiniDropbox.Data;
 using NHibernate;
 using NHibernate.Linq;
 
+
 namespace MiniDropbox.DatabaseDeployer
 {
     class Program
@@ -17,7 +18,7 @@ namespace MiniDropbox.DatabaseDeployer
         static void Main(string[] args)
         {
             MsSqlConfiguration databaseConfiguration = MsSqlConfiguration.MsSql2008.ShowSql().
-               ConnectionString(x => x.FromConnectionStringWithKey("MiniDropbox.Remote"));
+               ConnectionString(x => x.FromConnectionStringWithKey("MiniDropbox.Local"));
 
             DomainDrivenDatabaseDeployer.DatabaseDeployer dd = null;
             ISessionFactory sessionFactory = new SessionFactoryBuilder(new MappingScheme(), databaseConfiguration)
@@ -30,17 +31,17 @@ namespace MiniDropbox.DatabaseDeployer
             dd.Create();
             Console.WriteLine("Database created.");
 
-            ISession session = sessionFactory.OpenSession();
-            using (ITransaction tx = session.BeginTransaction())
-            {
-                dd.Seed(new List<IDataSeeder>
-                            {
-                                new AccountSeeder(session)
-                            });
-                tx.Commit();
-            }
-            session.Close();
-            sessionFactory.Close();
+            //ISession session = sessionFactory.OpenSession();
+            //using (ITransaction tx = session.BeginTransaction())
+            //{
+            //    dd.Seed(new List<IDataSeeder>
+            //                {
+            //                    new AccountSeeder(session)
+            //                });
+            //    tx.Commit();
+            //}
+            //session.Close();
+            //sessionFactory.Close();
             Console.WriteLine("Seed data added.");
             Thread.Sleep(2000);
         }
