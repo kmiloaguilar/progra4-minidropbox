@@ -24,6 +24,9 @@ namespace MiniDropbox.Web.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            var account = _readOnlyRepository.First<Account>(x => x.Email == User.Identity.Name);
+            
+
             var diskContentList = Builder<DiskContentModel>.CreateListOfSize(10).Build();
             return View(diskContentList);
         }
@@ -47,12 +50,12 @@ namespace MiniDropbox.Web.Controllers
                 var putObjectRequest = new PutObjectRequest
                     {
                         BucketName = account.BucketName,
-                        FilePath = file.FileName,
-                        Timeout = -1,
-                        ReadWriteTimeout = 300000
+                        Key = file.FileName,
+                        InputStream = file.InputStream
                     };
                 
                 client.PutObject(putObjectRequest);
+                //save to database here
 
                 Success("The file " + file.FileName + " was uploaded.");
                 return RedirectToAction("Index");
