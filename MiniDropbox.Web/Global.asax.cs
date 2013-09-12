@@ -14,6 +14,7 @@ using BootstrapSupport;
 using FluentNHibernate.Cfg.Db;
 using MiniDropbox.Data;
 using MiniDropbox.Domain.Services;
+using MiniDropbox.Web.App_Start;
 using MiniDropbox.Web.Infrastructure;
 using NHibernate;
 using NHibernate.Context;
@@ -84,14 +85,19 @@ namespace MiniDropbox.Web
 
         protected override IKernel CreateKernel()
         {
-            var kernel = new StandardKernel();
-            kernel.Load(Assembly.GetExecutingAssembly());
+            
 
+
+            var kernel = new StandardKernel();
+            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+            kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+            kernel.Load(Assembly.GetExecutingAssembly());
+            kernel.Load(Assembly.GetCallingAssembly());
             kernel.Bind<IReadOnlyRepository>().To<ReadOnlyRepository>();
             kernel.Bind<IWriteOnlyRepository>().To<WriteOnlyRepository>();
             kernel.Bind<ISession>().ToMethod(x => SessionFactory.GetCurrentSession());
             kernel.Bind<IMappingEngine>().ToConstant(Mapper.Engine);
-
+            GlobalConfiguration.Configuration.DependencyResolver = new NinjectDependencyResolver(kernel);
 
             return kernel;
         }

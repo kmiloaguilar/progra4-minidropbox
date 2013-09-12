@@ -45,7 +45,7 @@ namespace MiniDropbox.Web.Controllers
                 string roleToAdd = "";
                 roleToAdd = account.IsAdmin ? "Admin" : "User";
                 roles.Add(roleToAdd);
-                FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
+                FormsAuthentication.SetAuthCookie(model.Email, false);
                 SetAuthenticationCookie(model.Email, roles);
                 return RedirectToAction("Index", "Disk");
             }
